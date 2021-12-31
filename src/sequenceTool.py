@@ -32,3 +32,20 @@ def GetIntersection(list1, list2) -> list:
     
     return list3
 
+
+def FindTickLR(tgt, aList) -> tuple:
+    '''
+    Find the values in aList which confine the value of tgt. For example,
+    If aList = [1,2,3,4,5] and tgt = 3.5, then return (tickL, tickR) = (3, 4).
+    '''
+    tickL = aList[0]
+    tickR = aList[-1]
+
+    for tick in aList:
+        if tick < tgt and tick > tickL:
+            tickL = tick
+
+        if tick > tgt and tick < tickR:
+            tickR = tick
+    
+    return tickL, tickR
