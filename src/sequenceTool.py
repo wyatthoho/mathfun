@@ -49,3 +49,14 @@ def FindTickLR(tgt, aList) -> tuple:
             tickR = tick
     
     return tickL, tickR
+
+
+def PrintLoopState(msg, itr, total, inc=50):
+    '''
+    Use this function within a loop to print the status for the loop.
+    '''
+    if itr % inc == 0:
+        print('\r{}: {}/{}'.format(msg, itr, total), end='', flush=True)
+    elif itr == total:
+        print('\r{}: {}/{}'.format(msg, itr, total), end='', flush=True)
+        print('')
