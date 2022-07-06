@@ -8,36 +8,36 @@ def GetDistance(pt1, pt2) -> float:
     '''
     Return the length between two points.
     '''
-    vector = [pt1[itr]-pt2[itr] for itr in range(len(pt1))]
-    length = sum([component**2 for component in vector])**0.5
-    return length
+    return sum(map(lambda ai, bi: (ai - bi)**2, pt1, pt2))**0.5
 
 
-def GetOrientation(pt1, pt2, unit='rad') -> float:
+def GetOrient(pt1, pt2, unit='rad') -> float:
     '''
     Return the orientation defined by two points.
     Two types of angular unit are available including radian and degree.
     '''
-    deltaX = pt2[0] - pt1[0]
-    deltaY = pt2[1] - pt1[1]
+    dx = pt2[0] - pt1[0]
+    dy = pt2[1] - pt1[1]
     
     # Get quadrant
-    if deltaX > 0 and deltaY >= 0:
-        orient = np.arctan(deltaY/deltaX)
-    elif deltaX < 0 and deltaY >= 0:
-        orient = np.pi + np.arctan(deltaY/deltaX)
-    elif deltaX < 0 and deltaY < 0:
-        orient = np.pi + np.arctan(deltaY/deltaX)
-    elif deltaX > 0 and deltaY < 0:
-        orient = 2*np.pi + np.arctan(deltaY/deltaX)
-    elif deltaX == 0 and deltaY >= 0:
-        orient = 1/2 * np.pi
-    elif deltaX == 0 and deltaY < 0:
-        orient = 3/2 * np.pi
+    if dx > 0 and dy >= 0:
+        orient = np.arctan(dy/dx)
+    elif dx < 0 and dy >= 0:
+        orient = np.pi + np.arctan(dy/dx)
+    elif dx < 0 and dy < 0:
+        orient = np.pi + np.arctan(dy/dx)
+    elif dx > 0 and dy < 0:
+        orient = 2 * np.pi + np.arctan(dy/dx)
+    elif dx == 0 and dy > 0:
+        orient = 1 / 2 * np.pi
+    elif dx == 0 and dy < 0:
+        orient = 3 / 2 * np.pi
+    elif dx == 0 and dy == 0:
+        orient = 0
 
     # Unit
     if unit == 'rad':
-        orient = orient
+        pass
     elif unit == 'deg':
         orient = np.degrees(orient)
 
@@ -87,7 +87,6 @@ def TransCartesianSpheric(vector) -> list:
 
     x, y, z = vector
     radius = (x**2 + y**2 + z**2)**0.5
-    
     theta = np.arctan(y / (x**2 + z**2)**0.5)
 
     if x >= 0:
@@ -110,29 +109,9 @@ def TransCartesianPhi3(vector) -> list:
 
     phiList = [radius]
     for comp1, comp2 in ((y,z), (z,x), (x,y)):
-        if comp1 > 0 and comp2 == 0:
-            phi = 0
-        elif comp1 > 0 and comp2 > 0:
-            phi = np.arctan(comp2/comp1)
-        elif comp1 == 0 and comp2 > 0:
-            phi = 1/2 * np.pi
-        elif comp1 < 0 and comp2 > 0:
-            phi = 1 * np.pi + np.arctan(comp2/comp1)
-        elif comp1 < 0 and comp2 == 0:
-            phi = 1 * np.pi 
-        elif comp1 < 0 and comp2 < 0:
-            phi = 1 * np.pi + np.arctan(comp2/comp1)
-        elif comp1 == 0 and comp2 < 0:
-            phi = 3/2 * np.pi
-        elif comp1 > 0 and comp2 < 0:
-            phi = 2 * np.pi + np.arctan(comp2/comp1)
-
-        if comp1 == 0 and comp2 == 0:
-            phi = 0
-        
+        phi = GetOrient(comp1, comp2)
         phiList.append(phi)
 
-    # print 'radius: {:8.5f}, phi1: {:8.5f}, phi2: {:8.5f}, phi3: {:8.5f}'.format(phiList[0], phiList[1], phiList[2], phiList[3])
     return phiList
 
 
