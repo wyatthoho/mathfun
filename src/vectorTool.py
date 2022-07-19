@@ -155,3 +155,24 @@ def GetAngleBetweenTwoVector(vec1, vec2, unit='rad') -> float:
 
     return angle
 
+
+def GetPolygonArea(coords: np.ndarray) -> float:
+    '''
+    # Parameters
+
+    coords: [[x0, y0], [x1, y1], ...]
+    
+    # Return
+
+    area: float
+    '''
+    coords_2 = np.insert(coords[0:-1], 0, coords[-1], axis=0)
+    area = abs(sum(coords[:, 0] * coords_2[:, 1] - coords[:, 1] * coords_2[:, 0])) / 2
+    return area
+
+
+if __name__ == '__main__':
+    coords = np.array([[-1, -1], [-1, 0], [-1, 1], [1, 1], [1, -1]])
+    area = GetPolygonArea(coords)
+    print(area)
+
